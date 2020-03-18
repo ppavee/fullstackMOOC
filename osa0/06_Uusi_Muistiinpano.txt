@@ -1,0 +1,14 @@
+note over selain
+luo uusi muistiinpano,
+lisää se muiden joukkoon
+ja renderöi muistiinpanot
+end note
+
+selain->palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa\nRequest payload: {content: "testeri", date: "2020-03-18T16:40:55.338Z"}
+
+palvelin-->selain: Response message: {message: "note created"}
+
+note over selain
+kirjoita vastausviesti
+konsoliin
+end note
