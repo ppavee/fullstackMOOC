@@ -33,14 +33,23 @@ const App = () => {
 
     const addPerson = (event) => {
         event.preventDefault()
-        const newPerson = {
-            name: newName,
-            number: newNumber
-        }
         const names = persons.map(person => person.name)
-        if (names.indexOf(newName) !== -1) {
-            alert(`${newName} is already added to phonebook`)
+        const indexOfPerson = names.indexOf(newName)
+        if (indexOfPerson !== -1) {
+            if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+                const oldPerson = persons[indexOfPerson]
+                const newPerson = {...oldPerson, number: newNumber}
+                personsService
+                    .put(newPerson)
+                    .then(response => {
+                        setPersons(persons.map(person => person.id !== newPerson.id ? person : newPerson))
+                    })
+            }
         } else {
+            const newPerson = {
+                name: newName,
+                number: newNumber
+            }
             personsService
                 .create(newPerson)
                 .then(response => {
