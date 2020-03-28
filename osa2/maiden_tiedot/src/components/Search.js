@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Search = ({value, handleChange}) => {
+const Search = ({ value, handleChange }) => {
     return (
         <div>
             find countries

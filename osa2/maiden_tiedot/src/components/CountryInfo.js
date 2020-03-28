@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CountryInfo = ({country}) => {
+const CountryInfo = ({ country }) => {
     return (
         <div>
             <h1>{country.name}</h1>
@@ -10,11 +10,11 @@ const CountryInfo = ({country}) => {
             </div>
             <h2>languages</h2>
             <ul>
-                {country.languages.map(language => 
+                {country.languages.map(language =>
                     <li key={language.iso639_1}>
                         {language.name}
                     </li>
-                    )}
+                )}
             </ul>
             <img alt={country.name} width='30%' src={country.flag} />
         </div>
