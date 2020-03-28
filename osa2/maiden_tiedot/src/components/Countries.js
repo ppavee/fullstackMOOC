@@ -3,6 +3,7 @@ import Country from './Country'
 import CountryInfo from './CountryInfo'
 
 const Countries = ({ countries, handleCountryClick }) => {
+
     if (countries.length > 10) {
         return (
             <div>
@@ -10,6 +11,7 @@ const Countries = ({ countries, handleCountryClick }) => {
             </div>
         )
     } else if (countries.length === 1) {
+        
         return (
             <div>
                 <CountryInfo country={countries[0]} />
