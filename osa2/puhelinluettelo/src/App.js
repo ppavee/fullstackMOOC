@@ -41,7 +41,7 @@ const App = () => {
         event.preventDefault()
         const names = persons.map(person => person.name)
         const indexOfPerson = names.indexOf(newName)
-        if (indexOfPerson !== -1) {
+        if (indexOfPerson !== -1 && newNumber) {
             if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
                 const oldPerson = persons[indexOfPerson]
                 const newPerson = {...oldPerson, number: newNumber}
@@ -57,7 +57,7 @@ const App = () => {
                         setTimeout(() => setErrorMessage(null), 5000)
                     })
             }
-        } else {
+        } else if(newNumber) {
             const newPerson = {
                 name: newName,
                 number: newNumber
@@ -73,6 +73,9 @@ const App = () => {
                     setTimeout(() => setSuccessMessage(null), 5000)
                 })
 
+        } else {
+            setErrorMessage(`Please provide a number`)
+            setTimeout(() => setErrorMessage(null), 5000)
         }
     }
 
