@@ -78,7 +78,7 @@ const App = () => {
 
     const handleRemove = (id) => {
         const personToDelete = persons.find(person => person.id === id)
-        if(personToDelete.id > -1 && window.confirm(`Delete ${personToDelete.name}?`)) {
+        if(personToDelete.id && window.confirm(`Delete ${personToDelete.name}?`)) {
             personsService
                 .remove(id)
                 .then(response => {
