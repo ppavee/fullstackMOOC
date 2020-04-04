@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Parhaat karanteenivinkit",
+    "author": "Erakko",
+    "url": "http://www.karanteenivinkit.fi",
+    "likes": 9001
+}
