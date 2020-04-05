@@ -62,7 +62,7 @@ const blogs = [
     }
 ]
 
-const listWithTwoBlogs = [
+const listWithEquallyLikedBlogs = [
     {
         _id: "5a422a851b54a676234d17f7",
         title: "React patterns",
@@ -142,18 +142,16 @@ describe('favorite blog', () => {
     })
 
     test('returns one when two blogs are equally liked', () => {
-        const result = listHelper.favoriteBlog(listWithTwoBlogs)
+        const result = listHelper.favoriteBlog(listWithEquallyLikedBlogs)
 
-        const blog1 = {
-            title: "React patterns",
-            author: "Michael Chan",
-            likes: 7,
-        }
-        const blog2 = {
-            title: "Go To Statement Considered Harmful",
-            author: "Edsger W. Dijkstra",
-            likes: 7,
-        }
-        expect([blog1, blog2]).toEqual(expect.arrayContaining([result]))
+        const blogsMapped = listWithEquallyLikedBlogs.map(b => {
+           return (
+            { 
+                title: b.title,
+                author: b.author,
+                likes: b.likes
+            })
+        })
+        expect(blogsMapped).toContainEqual(result)
     })
 })
