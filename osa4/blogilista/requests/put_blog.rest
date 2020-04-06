@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/5e88cf7e6d692b18b8935232
+Content-Type: application/json
+
+{
+    "likes": 99,
+    "title": "10 things you do wrong",
+    "author": "Niksipirkka",
+    "url": "http://www.10thingswrong.yeet"
+}
