@@ -158,14 +158,13 @@ describe('favorite blog', () => {
 
 describe('who has most blogs', () => {
 
-    test('author with most blogs is unique', () => {
+    test('returns the author with most blogs and number of blogs', () => {
         const result = listHelper.mostBlogs(blogs)
-        console.log(result)
         const expected = {
             author: 'Robert C. Martin',
             blogs: 3
         }
-        expect(result).toContainEqual(expected)
+        expect(expected).toEqual(result)
     })
 
     test('returns one of numerous authors when equal number of blogs', () => {
@@ -181,8 +180,42 @@ describe('who has most blogs', () => {
         expect(blogsMapped).toContainEqual(result)
     })
 
-    test('is null in empty list', () => {
+    test('is null in empty array', () => {
         const result = listHelper.mostBlogs([])
+
+        expect(result).toEqual(null)
+    })
+})
+
+describe('who has most likes', () => {
+
+    test('returns the author with most likes and number of likes', () => {
+        const result = listHelper.mostLikes(blogs)
+        const expected = {
+            author: 'Edsger W. Dijkstra',
+            likes: 17
+        }
+        expect(expected).toEqual(result)
+    })
+
+    test('returns one of numerous authors when equal number of likes', () => {
+        const result = listHelper.mostLikes(listWithEquallyLikedBlogs)
+
+        const possibleObjects = [
+            {
+                author: 'Michael Chan',
+                likes: 7
+            },
+            {
+                author: 'Edsger W. Dijkstra',
+                likes: 7
+            }
+        ]
+        expect(possibleObjects).toContainEqual(result)
+    })
+
+    test('is null in empty array', () => {
+        const result = listHelper.mostLikes([])
 
         expect(result).toEqual(null)
     })
