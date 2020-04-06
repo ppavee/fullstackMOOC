@@ -85,7 +85,7 @@ test('a blog without title and url is not added', async () => {
         .expect(400)
 
     const blogsAtEnd = await api.get('/api/blogs')
-    expect(blogsAtEnd).toHaveLength(listHelper.initialBlogs.length)
+    expect(blogsAtEnd.body).toHaveLength(listHelper.initialBlogs.length)
 })
 
 test('a blog without title is not added', async () => {
@@ -101,7 +101,7 @@ test('a blog without title is not added', async () => {
         .expect(400)
 
     const blogsAtEnd = await api.get('/api/blogs')
-    expect(blogsAtEnd).toHaveLength(listHelper.initialBlogs.length)
+    expect(blogsAtEnd.body).toHaveLength(listHelper.initialBlogs.length)
 })
 
 test('a blog without url is not added', async () => {
@@ -117,7 +117,7 @@ test('a blog without url is not added', async () => {
         .expect(400)
 
     const blogsAtEnd = await api.get('/api/blogs')
-    expect(blogsAtEnd).toHaveLength(listHelper.initialBlogs.length)
+    expect(blogsAtEnd.body).toHaveLength(listHelper.initialBlogs.length)
 })
 
 
