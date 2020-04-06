@@ -155,3 +155,35 @@ describe('favorite blog', () => {
         expect(blogsMapped).toContainEqual(result)
     })
 })
+
+describe('who has most blogs', () => {
+
+    test('author with most blogs is unique', () => {
+        const result = listHelper.mostBlogs(blogs)
+        console.log(result)
+        const expected = {
+            author: 'Robert C. Martin',
+            blogs: 3
+        }
+        expect(result).toContainEqual(expected)
+    })
+
+    test('returns one of numerous authors when equal number of blogs', () => {
+        const result = listHelper.mostBlogs(listWithEquallyLikedBlogs)
+
+        const blogsMapped = listWithEquallyLikedBlogs.map(b => {
+           return (
+            { 
+                author: b.author,
+                blogs: 1
+            })
+        })
+        expect(blogsMapped).toContainEqual(result)
+    })
+
+    test('is null in empty list', () => {
+        const result = listHelper.mostBlogs([])
+
+        expect(result).toEqual(null)
+    })
+})
