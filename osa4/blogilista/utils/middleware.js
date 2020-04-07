@@ -11,11 +11,8 @@ const requestLogger = (request, response, next) => {
 
 const tokenExtractor = (request, response, next) => {
     const authorization = request.get('authorization')
-    console.log('author')
-    console.log(authorization)
     if(authorization && authorization.toLowerCase().startsWith('bearer ')) {
         request.token = authorization.substring(7)
-        console.log(request.token)
     }
     next()
 }
@@ -31,6 +28,8 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).json({ error: error.message })
     } else if (error.name === 'CastError' && error.path === '_id') {
         return response.status(400).send({ error: 'malformatted id' })
+    } else if(error.name === 'JsonWebTokenError') {
+        return response.status(400).send({ error: 'server couldn\'t find an authorization token or it was invalid '})
     }
 
     next(error)
