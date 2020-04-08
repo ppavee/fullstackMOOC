@@ -5,4 +5,15 @@ const usersInDb = async () => {
     return users.map(u => u.toJSON())
 }
 
-module.exports = { usersInDb }
+const createUser = async () => {
+    const dummyUser = new User({
+        username: 'dummy',
+        name: 'Dummy User',
+        password: 'this-is-not-a-good-pw'
+    })
+    console.log('adsaddasdasdad')
+    const response = await dummyUser.save()
+    return response
+}
+
+module.exports = { usersInDb, createUser }

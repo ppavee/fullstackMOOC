@@ -1,5 +1,7 @@
 const _ = require('lodash')
 const Blog = require('../models/blog')
+const jwt = require('jsonwebtoken')
+const config = require('../utils/config')
 
 const initialBlogs = [
     {
@@ -68,7 +70,7 @@ const totalLikes = (blogs) => {
 }
 
 const favoriteBlog = (blogs) => {
-    if(blogs.length === 0) return null
+    if (blogs.length === 0) return null
 
     const blogsOrderedByLikesDESC = blogs.sort((b1, b2) => {
         return b1.likes === b2.likes
@@ -86,7 +88,7 @@ const favoriteBlog = (blogs) => {
 }
 
 const mostBlogs = (blogs) => {
-    if(!blogs || blogs.length === 0) {
+    if (!blogs || blogs.length === 0) {
         return null
     }
     let authorWithMostBlogs = _.chain(blogs)
@@ -104,13 +106,13 @@ const mostBlogs = (blogs) => {
 }
 
 const mostLikes = (blogs) => {
-    if(!blogs || blogs.length === 0) {
+    if (!blogs || blogs.length === 0) {
         return null
     }
     let authorWithMostLikes = _.chain(blogs)
         .groupBy('author')
         .map(blogsByAuthor => {
-            let likesAmountByAuthor = _.sumBy(blogsByAuthor, function(o) {return o.likes})
+            let likesAmountByAuthor = _.sumBy(blogsByAuthor, function (o) { return o.likes })
             return (
                 {
                     author: blogsByAuthor[0].author,
@@ -122,4 +124,35 @@ const mostLikes = (blogs) => {
     return authorWithMostLikes
 }
 
-module.exports = { dummy, totalLikes, favoriteBlog, initialBlogs, mostBlogs, mostLikes, blogsInDb }
+const getToken = (user) => {
+    const userForToken = {
+        username: user.username,
+        id: user._id
+    }
+    const token = jwt.sign(userForToken, config.SECRET)
+    return token
+}
+
+const createTestBlog = (userId) => {
+    
+    const newBlog = {
+        title: "How to Javascript",
+        author: "Java Script",
+        url: "http://www.jsByHeart.com",
+        likes: 12,
+        user: userId
+    }
+    return newBlog
+}
+
+module.exports = {
+    dummy,
+    totalLikes,
+    favoriteBlog,
+    initialBlogs,
+    mostBlogs,
+    mostLikes,
+    blogsInDb,
+    getToken,
+    createTestBlog
+}

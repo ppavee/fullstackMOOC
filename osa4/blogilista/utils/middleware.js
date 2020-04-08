@@ -29,7 +29,7 @@ const errorHandler = (error, request, response, next) => {
     } else if (error.name === 'CastError' && error.path === '_id') {
         return response.status(400).send({ error: 'malformatted id' })
     } else if(error.name === 'JsonWebTokenError') {
-        return response.status(400).send({ error: 'server couldn\'t find an authorization token or it was invalid '})
+        return response.status(401).send({ error: 'server couldn\'t find an authorization token or it was invalid '})
     }
 
     next(error)

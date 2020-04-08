@@ -1,12 +1,29 @@
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const listHelper = require('../utils/list_helper')
+const config = require('../utils/config')
+
+let token
 
 describe('when there are some blogs saved', () => {
+
     beforeEach(async () => {
+        await User.deleteMany({})
+
+        dummyUser = new User({
+            username: 'dummy',
+            name: 'Dummy User',
+            password: 'this-is-not-a-good-pw'
+        })
+        await dummyUser.save()
+        const user = await User.findOne({ username: 'dummy' })
+        token = listHelper.getToken(user)
+
         await Blog.deleteMany({})
 
         const blogObjects = listHelper.initialBlogs
@@ -41,32 +58,30 @@ describe('when there are some blogs saved', () => {
 
     test('a new blog can be added', async () => {
         const blogsAtStart = await listHelper.blogsInDb()
-        const newBlog = {
-            title: "How to Javascript",
-            author: "Java Script",
-            url: "http://www.jsByHeart.com",
-            likes: 12
-        }
 
-        const response = await api.post('/api/blogs')
+        const user = await User.findOne({ username: 'dummy' })
+        const newBlog = listHelper.createTestBlog(user._id)
+
+        await api.post('/api/blogs')
             .send(newBlog)
+            .set({ 'Authorization': ` Bearer ${token}` })
             .expect(200)
             .expect('Content-Type', /application\/json/)
-        const createdBlog = response.body
+
         const blogsAtEnd = await listHelper.blogsInDb()
         expect(blogsAtEnd).toHaveLength(blogsAtStart.length + 1)
-        expect(blogsAtEnd).toContainEqual(createdBlog)
+        const blogTitles = blogsAtEnd.map(b => b.title)
+        expect(blogTitles).toContainEqual(newBlog.title)
     })
     describe('adding a new blog', () => {
         test('likes have default value zero', async () => {
-            const newBlog = {
-                title: "How to Javascript",
-                author: "Java Script",
-                url: "http://www.jsByHeart.com",
-            }
+            const user = await User.findOne({ username: 'dummy' })
+            const newBlog = listHelper.createTestBlog(user._id)
+            delete newBlog.likes
 
             await api.post('/api/blogs')
                 .send(newBlog)
+                .set({ 'Authorization': ` Bearer ${token}` })
                 .expect(200)
                 .expect('Content-Type', /application\/json/)
 
@@ -84,6 +99,7 @@ describe('when there are some blogs saved', () => {
             await api
                 .post('/api/blogs')
                 .send(newBlog)
+                .set({ 'Authorization': ` Bearer ${token}` })
                 .expect(400)
 
             const blogsAtEnd = await listHelper.blogsInDb()
@@ -100,6 +116,7 @@ describe('when there are some blogs saved', () => {
             await api
                 .post('/api/blogs')
                 .send(newBlog)
+                .set({ 'Authorization': ` Bearer ${token}` })
                 .expect(400)
 
             const blogsAtEnd = await listHelper.blogsInDb()
@@ -116,7 +133,21 @@ describe('when there are some blogs saved', () => {
             await api
                 .post('/api/blogs')
                 .send(newBlog)
+                .set({ 'Authorization': ` Bearer ${token}` })
                 .expect(400)
+
+            const blogsAtEnd = await listHelper.blogsInDb()
+            expect(blogsAtEnd).toHaveLength(listHelper.initialBlogs.length)
+        })
+
+        test('a blog without providing a token is not added', async () => {
+            const user = await User.findOne({ username: 'dummy' })
+            const newBlog = listHelper.createTestBlog(user._id)
+
+            await api
+                .post('/api/blogs')
+                .send(newBlog)
+                .expect(401)
 
             const blogsAtEnd = await listHelper.blogsInDb()
             expect(blogsAtEnd).toHaveLength(listHelper.initialBlogs.length)
@@ -124,14 +155,25 @@ describe('when there are some blogs saved', () => {
     })
     describe('deleting a blog', () => {
         test('a blog can be deleted', async () => {
-            const blogsAtStart = await listHelper.blogsInDb()
-            const id = blogsAtStart[0].id
+            const user = await User.findOne({ username: 'dummy' })
+            const newBlog = listHelper.createTestBlog(user._id)
 
-            await api.delete(`/api/blogs/${id}`)
+            await api
+                .post('/api/blogs')
+                .send(newBlog)
+                .set({ 'Authorization': ` Bearer ${token}` })
+
+
+            const blogsAtStart = await listHelper.blogsInDb()
+            const blogToDelete = await Blog.find({ title: 'How to Javascript' })
+
+            await api.delete(`/api/blogs/${blogToDelete[0]._id}`)
+                .set({ 'Authorization': ` Bearer ${token}` })
                 .expect(204)
 
+
             const blogsAtEnd = await listHelper.blogsInDb()
-            expect(blogsAtEnd).not.toContain(blogsAtStart[0])
+            expect(blogsAtEnd).not.toContain(newBlog)
             expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1)
         })
     })
