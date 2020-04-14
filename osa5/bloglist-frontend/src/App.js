@@ -86,12 +86,15 @@ const App = () => {
   const addBlog = newBlog => {
     blogFormRef.current.toggleVisibility()
     try {
-      newBlog = {...newBlog, user}
       blogService
         .create(newBlog)
         .then(returnedBlog => {
+          returnedBlog = { ...returnedBlog, user: {
+            id: returnedBlog.user,
+            name: user.name,
+            username: user.username
+          }}
           setBlogs(sortBlogsByLikes(blogs.concat(returnedBlog)))
-          console.log(blogs)
         })
       setSuccessMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
       setTimeout(() => {
@@ -107,11 +110,10 @@ const App = () => {
 
   const addLike = blog => {
     try {
-      const userWhoAdded = blog.user
       blogService
         .like(blog)
         .then(returnedBlog => {
-          returnedBlog.user = userWhoAdded
+          returnedBlog.user = blog.user
           setBlogs(sortBlogsByLikes(blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)))
         })
       setSuccessMessage(`${blog.title} liked`)

@@ -17,15 +17,16 @@ const create = async newObject => {
     headers: { Authorization: token }
   }
   const response = await axios.post(baseUrl, newObject, config)
-  console.log(response)
   return response.data
 }
 
 const like = async blog => {
+  console.log(blog)
   const newBlog = {
-    ...blog, likes: blog.likes + 1
+    ...blog, likes: blog.likes + 1, user: blog.user.id
   }
   const response = await axios.put(`${baseUrl}/${blog.id}`, newBlog)
+  console.log(response)
   return response.data
 }
 
