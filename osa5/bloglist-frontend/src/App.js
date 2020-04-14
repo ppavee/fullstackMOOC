@@ -83,19 +83,12 @@ const App = () => {
     }, 5000)
   }
 
-  const addBlog = newBlog => {
+  const addBlog = async newBlog => {
     blogFormRef.current.toggleVisibility()
     try {
-      blogService
-        .create(newBlog)
-        .then(returnedBlog => {
-          returnedBlog = { ...returnedBlog, user: {
-            id: returnedBlog.user,
-            name: user.name,
-            username: user.username
-          }}
-          setBlogs(sortBlogsByLikes(blogs.concat(returnedBlog)))
-        })
+      const returnedBlog = await blogService.create(newBlog)
+      setBlogs(sortBlogsByLikes(blogs.concat(returnedBlog)))
+
       setSuccessMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
       setTimeout(() => {
         setSuccessMessage(null)
@@ -108,14 +101,11 @@ const App = () => {
     }
   }
 
-  const addLike = blog => {
+  const addLike = async blog => {
     try {
-      blogService
-        .like(blog)
-        .then(returnedBlog => {
-          returnedBlog.user = blog.user
-          setBlogs(sortBlogsByLikes(blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)))
-        })
+      const returnedBlog = await blogService.like(blog)
+      returnedBlog.user = blog.user
+      setBlogs(sortBlogsByLikes(blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)))
       setSuccessMessage(`${blog.title} liked`)
       setTimeout(() => {
         setSuccessMessage(null)
@@ -128,14 +118,12 @@ const App = () => {
     }
   }
 
-  const removeBlog = (blog) => {
+  const removeBlog = async (blog) => {
     const removeBlogConfirmation = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
     if (removeBlogConfirmation) {
       try {
-        blogService.remove(blog.id)
-          .then(response => {
-            setBlogs(sortBlogsByLikes(blogs.filter(b => b.id !== blog.id)))
-          })
+        await blogService.remove(blog.id)
+        setBlogs(sortBlogsByLikes(blogs.filter(b => b.id !== blog.id)))
 
         setSuccessMessage(`${blog.title} removed`)
         setTimeout(() => {
@@ -159,7 +147,7 @@ const App = () => {
         <form onSubmit={handleLogin}>
           <div>
             username
-        <input
+            <input
               type='text'
               value={username}
               onChange={handleUsernameChange}
@@ -168,7 +156,7 @@ const App = () => {
           </div>
           <div>
             password
-        <input
+            <input
               type='password'
               value={password}
               onChange={handlePasswordChange}

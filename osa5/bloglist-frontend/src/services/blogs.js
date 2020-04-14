@@ -21,12 +21,10 @@ const create = async newObject => {
 }
 
 const like = async blog => {
-  console.log(blog)
   const newBlog = {
-    ...blog, likes: blog.likes + 1, user: blog.user.id
+    ...blog, likes: blog.likes + 1, user: blog.user
   }
   const response = await axios.put(`${baseUrl}/${blog.id}`, newBlog)
-  console.log(response)
   return response.data
 }
 
