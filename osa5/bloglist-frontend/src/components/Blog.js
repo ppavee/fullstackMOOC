@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, clickLike }) => {
-  const { title, author, url, likes } = blog
+const Blog = ({ blog, handleRemove, clickLike }) => {
+  const { title, author, url, likes, user } = blog
   const [showAll, setShowAll] = useState(false)
 
   const blogStyle = {
@@ -14,14 +14,20 @@ const Blog = ({ blog, clickLike }) => {
 
   const buttonLabel = showAll ? 'hide' : 'view'
 
+  const currentUser = JSON.parse(window.localStorage.getItem('loggedInBloglistUser')) || null
+  const showRemoveButton = user.username === currentUser.username
+
   const toggleShowAll = () => {
     setShowAll(!showAll)
-    
+    console.log(blog)
   }
 
   const addLike = () => {
     clickLike(blog)
-    console.log(blog.user.name)
+  }
+
+  const removeBlog = () => {
+    handleRemove(blog)
   }
 
   if (showAll) {
@@ -39,8 +45,12 @@ const Blog = ({ blog, clickLike }) => {
              <button onClick={addLike}>like</button>
           </div>
           <div>
-            {blog.user.name}
+            {user.name}
           </div>
+          {
+            showRemoveButton && 
+            <button onClick={removeBlog}>remove</button>
+          }
       </div>
     )
   }

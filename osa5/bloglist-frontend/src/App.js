@@ -17,9 +17,17 @@ const App = () => {
 
   const blogFormRef = React.createRef()
 
+  const sortBlogsByLikes = (blogs) => {
+    return blogs.sort((b1, b2) => {
+      return (b1.likes === b2.likes)
+        ? 0
+        : -(b1.likes - b2.likes)
+    })
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(sortBlogsByLikes(blogs))
     )
   }, [])
 
@@ -28,6 +36,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -77,10 +86,12 @@ const App = () => {
   const addBlog = newBlog => {
     blogFormRef.current.toggleVisibility()
     try {
+      newBlog = {...newBlog, user}
       blogService
         .create(newBlog)
         .then(returnedBlog => {
-          setBlogs(blogs.concat(returnedBlog))
+          setBlogs(sortBlogsByLikes(blogs.concat(returnedBlog)))
+          console.log(blogs)
         })
       setSuccessMessage(`a new blog ${newBlog.title} by ${newBlog.author} added`)
       setTimeout(() => {
@@ -96,10 +107,12 @@ const App = () => {
 
   const addLike = blog => {
     try {
+      const userWhoAdded = blog.user
       blogService
         .like(blog)
         .then(returnedBlog => {
-          setBlogs(blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog))
+          returnedBlog.user = userWhoAdded
+          setBlogs(sortBlogsByLikes(blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)))
         })
       setSuccessMessage(`${blog.title} liked`)
       setTimeout(() => {
@@ -110,6 +123,28 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
+    }
+  }
+
+  const removeBlog = (blog) => {
+    const removeBlogConfirmation = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
+    if (removeBlogConfirmation) {
+      try {
+        blogService.remove(blog.id)
+          .then(response => {
+            setBlogs(sortBlogsByLikes(blogs.filter(b => b.id !== blog.id)))
+          })
+
+        setSuccessMessage(`${blog.title} removed`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      } catch (exception) {
+        setErrorMessage('There was an error while trying to remove the blog')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      }
     }
   }
 
@@ -161,7 +196,7 @@ const App = () => {
         <BlogForm createBlog={addBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} clickLike={addLike} />
+        <Blog key={blog.id} blog={blog} handleRemove={removeBlog} clickLike={addLike} />
       )}
     </div>
   )
