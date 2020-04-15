@@ -152,6 +152,7 @@ const App = () => {
               value={username}
               onChange={handleUsernameChange}
               name='Username'
+              id='login-username'
             />
           </div>
           <div>
@@ -161,9 +162,10 @@ const App = () => {
               value={password}
               onChange={handlePasswordChange}
               name='Password'
+              id='login-password'
             />
           </div>
-          <button type='submit'>Login</button>
+          <button id='login-button' type='submit'>Login</button>
         </form>
       </div>
     )
@@ -186,7 +188,7 @@ const App = () => {
         <BlogForm createBlog={addBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleRemove={removeBlog} clickLike={addLike} className='blog' />
+        <Blog key={blog.id} blog={blog} handleRemove={removeBlog} clickLike={addLike} />
       )}
     </div>
   )

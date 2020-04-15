@@ -1,22 +1,17 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import '../index.css'
 
 const Blog = ({ blog, handleRemove, clickLike }) => {
   const { title, author, url, likes, user } = blog
   const [showAll, setShowAll] = useState(false)
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
   const buttonLabel = showAll ? 'hide' : 'view'
 
   const currentUser = JSON.parse(window.localStorage.getItem('loggedInBloglistUser')) || null
-  const showRemoveButton = user.username === currentUser.username
+  const showRemoveButton = (!user || !currentUser)
+    ? false
+    : (user.username === currentUser.username)
 
   const toggleShowAll = () => {
     setShowAll(!showAll)
@@ -32,7 +27,7 @@ const Blog = ({ blog, handleRemove, clickLike }) => {
 
   if (showAll) {
     return (
-      <div style={blogStyle}>
+      <div className='blogStyle'>
         <div>
           {title} {author}
           <button onClick={toggleShowAll}>{buttonLabel}</button>
@@ -41,7 +36,7 @@ const Blog = ({ blog, handleRemove, clickLike }) => {
           {url}
         </div>
         <div>
-          likes {likes}
+          likes <span className='blogLikes'>{likes}</span>
           <button onClick={addLike}>like</button>
         </div>
         <div>
@@ -56,7 +51,7 @@ const Blog = ({ blog, handleRemove, clickLike }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div className='blogStyle'>
       {title} {author}
       <button onClick={toggleShowAll}>{buttonLabel}</button>
     </div>

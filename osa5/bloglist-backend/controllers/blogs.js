@@ -33,11 +33,11 @@ router.put('/:id', async (request, response) => {
   const body = request.body
   console.log(body)
   const blog = {
-      title: body.title,
-      author: body.author,
-      url: body.url,
-      likes: body.likes,
-      user: body.user.id
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
+    user: body.user.id
   }
 
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
