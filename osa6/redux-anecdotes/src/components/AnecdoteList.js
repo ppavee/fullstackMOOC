@@ -6,12 +6,12 @@ import { setNotification, removeNotification } from '../reducers/notificationRed
 const Anecdote = ({ anecdote, votes, handleClick }) => {
   const dispatch = useDispatch()
   const handleVote = () => {
-    dispatch(voteAnecdote(anecdote.id))
+    dispatch(voteAnecdote(anecdote))
 
-    dispatch(setNotification(`you voted '${anecdote.content}'`))
-    setTimeout(() => {
-      dispatch(removeNotification())
-    }, 5000)
+    dispatch(setNotification(`you voted '${anecdote.content}'`, 5))
+    // setTimeout(() => {
+    //   dispatch(removeNotification())
+    // }, 5000)
   }
 
   return (
