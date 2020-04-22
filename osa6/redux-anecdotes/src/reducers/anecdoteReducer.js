@@ -1,17 +1,4 @@
 import anecdotesService from '../services/anecdotes'
-import anecdotes from '../services/anecdotes'
-
-const getId = () => (100000 * Math.random()).toFixed(0)
-
-const asObject = (anecdote) => {
-  return {
-    content: anecdote,
-    id: getId(),
-    votes: 0
-  }
-}
-
-//const initialState = anecdotesAtStart.map(asObject)
 
 const anecdoteReducer = (state = [], action) => {
   console.log('state now: ', state)
@@ -24,7 +11,6 @@ const anecdoteReducer = (state = [], action) => {
         ? anecdote 
         : votedAnecdote)
     case 'ADD_ANECDOTE':
-     // const newAnecdote = asObject(action.data)
       return [ ...state, action.data ]
     case 'INIT_ANECDOTES':
       return action.data
