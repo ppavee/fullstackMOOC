@@ -1,0 +1,55 @@
+.success {
+  color: green;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.error {
+  color: red;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#bloglist {
+  list-style: none;
+  padding-left: 2px;
+}
+
+.blogStyle {
+  padding-top: 10px;
+  padding-left: 2px;
+  border: solid;
+  border-width: 1px;
+  margin-bottom: 5px;
+}
+
+button {
+  margin: 0 2px 0 2px;
+}
+
+.navbar-login {
+  display: inline;
+  position: absolute;
+  right: 20px;
+
+}
+
+td a{
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  padding: 0;
+}
+
+#login-button {
+  margin-top: 5px;
+}
