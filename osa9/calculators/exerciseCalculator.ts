@@ -6,7 +6,7 @@ interface ExerciseArguments {
   exerciseValues: Array<number>;
 }
 
-interface Result {
+export interface Result {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -24,7 +24,7 @@ const parseInput = (args: Array<string>): ExerciseArguments => {
     throw new Error('Target value wasn\'t a number.');
   }
 
-  let exludeTargetNumbers: Array<number> = new Array<number>();
+  const exludeTargetNumbers: Array<number> = new Array<number>();
   exludeTarget.forEach(val => {
     if(isNaN(Number(val))) {
       throw new Error('A given exercise value wasn\'t a number.');
@@ -37,9 +37,9 @@ const parseInput = (args: Array<string>): ExerciseArguments => {
     exerciseTarget: Number(args[2]),
     exerciseValues: exludeTargetNumbers
   };
-}
+};
 
-const calculateExercises = (exerciseHours: number[], target: number): Result => {
+export const calculateExercises = (exerciseHours: number[], target: number): Result => {
   const periodLength: number = exerciseHours.length;
   const trainingDays: number = exerciseHours.filter(dailyHours => dailyHours > 0).length;
   const average: number = (exerciseHours.reduce((prev, curr) => prev + curr)) / periodLength; 
@@ -75,9 +75,11 @@ const calculateExercises = (exerciseHours: number[], target: number): Result => 
   };
 };
 
-try {
-  const { exerciseTarget, exerciseValues }: ExerciseArguments = parseInput(process.argv);
-  console.log(calculateExercises(exerciseValues, exerciseTarget));
-} catch (e) {
-  console.log('An error happened while executing the program. Message:', e.message);
+if (!process.argv[1] && process.argv[1] === 'exerciseCalculator.ts') {
+  try {
+    const { exerciseTarget, exerciseValues }: ExerciseArguments = parseInput(process.argv);
+    console.log(calculateExercises(exerciseValues, exerciseTarget));
+  } catch (e) {
+    console.log('An error happened while executing the program. Message:', e.message);
+  }
 }

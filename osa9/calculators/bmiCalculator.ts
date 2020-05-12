@@ -3,7 +3,7 @@ interface BmiArguments {
   weight: number;
 }
 
-type BmiCategory = 'Very severely underweight' | 'Severely underweight' | 'Underweight'
+export type BmiCategory = 'Very severely underweight' | 'Severely underweight' | 'Underweight'
   | 'Normal (healthy weight)' | 'Overweight' | 'Obese Class I (Moderately obese)'
   | 'Obese Class II (Severely obese)' | 'Obese Class III (Very severely obese)';
 
@@ -21,7 +21,7 @@ const parseArguments = (args: Array<string>): BmiArguments => {
   }
 };
 
-const calculateBmi = (height: number, weight: number): BmiCategory => {
+export const calculateBmi = (height: number, weight: number): BmiCategory => {
   const heightInMeters: number = height/100;
   const bmi: number = weight / (heightInMeters*heightInMeters);
   if(bmi < 15) {
@@ -43,9 +43,11 @@ const calculateBmi = (height: number, weight: number): BmiCategory => {
   }
 };
 
-try {
-  const { height, weight }: BmiArguments = parseArguments(process.argv);
-  console.log(calculateBmi(height, weight)); 
-} catch (e) {
-  console.log('An error stopped the execution of the program. Message:', e.message);
+if (!process.argv[1] && process.argv[1] === 'bmiCalculator.ts') {
+  try {
+    const { height, weight }: BmiArguments = parseArguments(process.argv);
+    console.log(calculateBmi(height, weight));
+  } catch (e) {
+    console.log('An error stopped the execution of the program. Message:', e.message);
+  }
 }
